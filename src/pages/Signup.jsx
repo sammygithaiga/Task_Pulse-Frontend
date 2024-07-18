@@ -2,10 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Signup = () => {
-  // Example function to handle signup form submission
   const handleSignup = (e) => {
     e.preventDefault();
-    // Perform signup logic here
     console.log('Signing up...');
   };
 
