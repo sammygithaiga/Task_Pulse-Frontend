@@ -11,7 +11,7 @@ const Navbar = () => {
 
   const handleNavigation = (path) => {
     console.log(`Navigating to: ${path}`);
-    window.location.href = path; // Navigate to the specified path
+    window.location.href = path; 
   };
 
   return (
@@ -19,7 +19,7 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-2xl font-bold">TASK PULSE</div>
 
-        {/* Desktop Navigation */}
+      
         <div className="hidden md:flex space-x-4">
           <button onClick={() => handleNavigation('/home')} className="text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">
             <FontAwesomeIcon icon={faHome} className="mr-2" />
@@ -39,7 +39,7 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        
         <div className="md:hidden">
           <button onClick={toggleMenu} className="text-white focus:outline-none">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
