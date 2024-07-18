@@ -21,7 +21,8 @@ const LandingPage = () => {
         <h1 className="text-4xl font-bold text-center mb-6">Welcome to Task Pulse</h1>
         <p className="text-lg text-gray-300 text-center mb-8">Your ultimate solution for managing tasks efficiently.</p>
         
-       
+
+     ft-samuel-first
         <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="p-6 rounded-lg bg-gray-700 shadow-md">
             <h2 className="text-2xl font-semibold text-white mb-4">Task Organization</h2>
@@ -31,15 +32,20 @@ const LandingPage = () => {
             <h2 className="text-2xl font-semibold text-white mb-4">Collaboration</h2>
             <p className="text-gray-300">Collaborate with team members by assigning tasks and tracking progress.</p>
           </div>
+          
+        </section>
+        
+      
         
         </section>
         
         
+
         <div className="mb-8">
           <img src="/images/mobile-scheduling.jpg" alt="Mobile Scheduling" className="mx-auto rounded-lg shadow-md" style={{ maxWidth: '100%', height: 'auto' }} />
         </div>
 
-        
+
         <div className="flex justify-center">
           <button onClick={() => handleNavigation('/login')} className="bg-blue-600 text-white py-3 px-6 rounded-md mr-4 hover:bg-blue-700 focus:outline-none">
             <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
