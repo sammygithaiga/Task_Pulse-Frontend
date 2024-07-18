@@ -39,7 +39,7 @@ const LandingPage = () => {
           <img src="/images/mobile-scheduling.jpg" alt="Mobile Scheduling" className="mx-auto rounded-lg shadow-md" style={{ maxWidth: '100%', height: 'auto' }} />
         </div>
 
-        {
+        
         <div className="flex justify-center">
           <button onClick={() => handleNavigation('/login')} className="bg-blue-600 text-white py-3 px-6 rounded-md mr-4 hover:bg-blue-700 focus:outline-none">
             <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
