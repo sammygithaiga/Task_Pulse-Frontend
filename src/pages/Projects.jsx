@@ -13,7 +13,6 @@ const ProjectsPage = () => {
       <div className="max-w-4xl mx-auto p-6 bg-white bg-opacity-80 rounded-lg shadow-lg">
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">Projects Page</h1>
         <p className="text-lg text-gray-700 text-center mb-8">This is where your projects content goes.</p>
-        {/* Add your projects content here */}
       </div>
     </div>
   );
