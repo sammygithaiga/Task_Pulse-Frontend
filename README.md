@@ -16,7 +16,16 @@ Installation Requirements: Must Have Git
 
 Link to Live Site On GitHub Pages: https://github.com/sammygithaiga/Task_Pulse-Frontend.git
 
-Technologies Used : REACT, Github, Tailwind.
+Technologies Used:
+The following languages, frameworks and APIs were used:
+
+  * React
+
+  * Tailwind
+
+  * GitHub
+
+
 
 Copyright and License Information: This project is licensed under the MIT License - see the LICENSE file for details. copyright (c) 2024
 
