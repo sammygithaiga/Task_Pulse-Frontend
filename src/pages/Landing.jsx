@@ -4,7 +4,11 @@ import { faSignInAlt, faUserPlus, faTasks, faUsers } from '@fortawesome/free-sol
 
 const LandingPage = () => {
   const handleNavigation = (path) => {
+
+    console.log(`Navigating to: ${path}`);
+
     console.log(Navigating to: ${path});
+
     window.location.href = path;
   };
 

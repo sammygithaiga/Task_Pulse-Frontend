@@ -1,23 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
 import { Modal, Button, Form } from 'react-bootstrap';
-//import 'bootstrap/dist/css/bootstrap.min.css';
+
+import { SERVER_URL } from '../../utils';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+const ProjectsPage = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [projectDetails, setProjectDetails] = useState({ title: '', description: '', status: 'Pending' });
+
+
 
 const ProjectsPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [projectDetails, setProjectDetails] = useState({ name: '', description: '', status: 'Pending' });
+
   const [projects, setProjects] = useState([]);
   const [filteredProjects, setFilteredProjects] = useState([]);
   const [filter, setFilter] = useState('All');
 
   useEffect(() => {
-    // Mock fetching projects from an API
+
+    fetch(`${SERVER_URL}/projects`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      setProjects(data.projects);
+      setFilteredProjects(data.projects);
+    })
+    .catch((error) => {
+      console.error('Error fetching projects:', error);
+      toast.error('Failed to fetch projects');
+    });
+
+    
     fetch('/api/projects')
       .then((response) => response.json())
       .then((data) => {
         setProjects(data);
         setFilteredProjects(data);
       });
+
   }, []);
 
   const handleShow = () => setShowModal(true);
@@ -25,7 +58,57 @@ const ProjectsPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Mock API call
+
+
+    fetch(`${SERVER_URL}/project`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify(projectDetails),
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      throw new Error('Network response was not ok');
+    })
+    .then((newProject) => {
+      toast.success('Project created successfully');
+      setProjects([...projects, newProject.project]);
+      handleFilter(filter, [...projects, newProject.project]);
+      handleClose();
+    })
+    .catch((error) => {
+      console.error('Error creating project:', error);
+      toast.error('Failed to create project');
+    });
+  };
+
+  const handleDelete = (projectId) => {
+    fetch(`${SERVER_URL}/project/${projectId}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    .then((response) => {
+      if (response.ok) {
+        toast.success('Project deleted successfully');
+        const updatedProjects = projects.filter((project) => project.id !== projectId);
+        setProjects(updatedProjects);
+        handleFilter(filter, updatedProjects);
+      } else {
+        throw new Error('Network response was not ok');
+      }
+    })
+    .catch((error) => {
+      console.error('Error deleting project:', error);
+      toast.error('Failed to delete project');
+    });
+
+   
     fetch('/api/projects', {
       method: 'POST',
       headers: {
@@ -62,6 +145,7 @@ const ProjectsPage = () => {
           toast.error('Failed to delete project');
         }
       });
+
   };
 
   const handleFilter = (status, projectsList = projects) => {
@@ -77,7 +161,11 @@ const ProjectsPage = () => {
     <div
       className="min-h-screen flex flex-col items-center font-serif"
       style={{
+
+        backgroundImage: `url('https://image.shutterstock.com/image-photo/abstract-black-scene-one-cylinder-260nw-2306875853.jpg')`,
+
         backgroundImage: url('https://image.shutterstock.com/image-photo/abstract-black-scene-one-cylinder-260nw-2306875853.jpg'),
+
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -129,7 +217,11 @@ const ProjectsPage = () => {
           <thead>
             <tr className="bg-teal-600 text-white">
               <th className="border px-4 py-2">Number</th>
+
+              <th className="border px-4 py-2">Tittle</th>
+
               <th className="border px-4 py-2">Name</th>
+
               <th className="border px-4 py-2">Description</th>
               <th className="border px-4 py-2">Status</th>
               <th className="border px-4 py-2">Actions</th>
@@ -139,7 +231,11 @@ const ProjectsPage = () => {
             {filteredProjects.map((project, index) => (
               <tr key={project.id} className="hover:bg-gray-100">
                 <td className="border px-4 py-2">{index + 1}</td>
+
+                <td className="border px-4 py-2">{project.title}</td>
+
                 <td className="border px-4 py-2">{project.name}</td>
+
                 <td className="border px-4 py-2">{project.description}</td>
                 <td className="border px-4 py-2">{project.status}</td>
                 <td className="border px-4 py-2">
@@ -159,6 +255,15 @@ const ProjectsPage = () => {
         </Modal.Header>
         <Modal.Body className="bg-gray-100">
           <Form onSubmit={handleSubmit}>
+
+            <Form.Group controlId="formProjectTitle">
+              <Form.Label>Title</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter project title"
+                value={projectDetails.title}
+                onChange={(e) => setProjectDetails({ ...projectDetails, title: e.target.value })}
+
             <Form.Group controlId="formProjectName">
               <Form.Label>Name</Form.Label>
               <Form.Control
@@ -166,6 +271,7 @@ const ProjectsPage = () => {
                 placeholder="Enter project name"
                 value={projectDetails.name}
                 onChange={(e) => setProjectDetails({ ...projectDetails, name: e.target.value })}
+
                 required
                 className="rounded-md"
               />
@@ -195,9 +301,20 @@ const ProjectsPage = () => {
                 <option value="Completed">Completed</option>
               </Form.Control>
             </Form.Group>
+
+            <div className="mt-4 flex justify-end">
+              <Button variant="secondary" onClick={handleClose} className="mr-2">
+                Close
+              </Button>
+              <Button variant="primary" type="submit">
+                Save Changes
+              </Button>
+            </div>
+
             <Button variant="primary" type="submit" className="mt-3 bg-teal-600 hover:bg-blue-700 text-white">
               Save
             </Button>
+
           </Form>
         </Modal.Body>
       </Modal>

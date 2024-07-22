@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
 import { Modal, Button, Form } from 'react-bootstrap';
-//import 'bootstrap/dist/css/bootstrap.min.css';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { SERVER_URL } from '../../utils';
+
 
 const Tasks = () => {
   const [showModal, setShowModal] = useState(false);
@@ -11,17 +14,92 @@ const Tasks = () => {
   const [filter, setFilter] = useState('All');
 
   useEffect(() => {
-    // Mock fetching tasks from an API
+
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`${SERVER_URL}/tasks`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // JWT token
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const { tasks } = await response.json(); 
+        setTasks(tasks);
+        setFilteredTasks(tasks);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+        toast.error('Failed to fetch tasks');
+      }
+    };
+
+    fetchTasks();
+
     fetch('/api/tasks')
       .then((response) => response.json())
       .then((data) => {
         setTasks(data);
         setFilteredTasks(data);
       });
+
   }, []);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await fetch(`${SERVER_URL}/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+        },
+        body: JSON.stringify(taskDetails),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      toast.success('Task created successfully');
+      const newTask = await response.json(); 
+      setTasks((prevTasks) => [...prevTasks, newTask]);
+      handleFilter(filter, [...tasks, newTask]);
+      handleClose();
+    } catch (error) {
+      console.error('Error creating task:', error);
+      toast.error('Failed to create task');
+    }
+  };
+
+  const handleDelete = async (taskId) => {
+    try {
+      const response = await fetch(`${SERVER_URL}/tasks/${taskId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // JWT token
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      toast.success('Task deleted successfully');
+      const updatedTasks = tasks.filter((task) => task.id !== taskId);
+      setTasks(updatedTasks);
+      handleFilter(filter, updatedTasks);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+      toast.error('Failed to delete task');
+    }
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -62,6 +140,7 @@ const Tasks = () => {
           toast.error('Failed to delete task');
         }
       });
+
   };
 
   const handleFilter = (status, tasksList = tasks) => {
@@ -77,7 +156,8 @@ const Tasks = () => {
     <div
       className="min-h-screen flex flex-col items-center font-serif"
       style={{
-        
+
+        backgroundImage: `url('https://image.shutterstock.com/image-photo/abstract-black-scene-one-cylinder-260nw-2306875853.jpg')
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -165,7 +245,11 @@ const Tasks = () => {
                 type="text"
                 placeholder="Enter task name"
                 value={taskDetails.name}
+
+                onChange={(e) => setTaskDetails((prevDetails) => ({ ...prevDetails, name: e.target.value }))}
+
                 onChange={(e) => setTaskDetails({ ...taskDetails, name: e.target.value })}
+
                 required
                 className="rounded-md"
               />
@@ -176,7 +260,11 @@ const Tasks = () => {
                 type="text"
                 placeholder="Enter task description"
                 value={taskDetails.description}
+
+                onChange={(e) => setTaskDetails((prevDetails) => ({ ...prevDetails, description: e.target.value }))}
+
                 onChange={(e) => setTaskDetails({ ...taskDetails, description: e.target.value })}
+
                 required
                 className="rounded-md"
               />
@@ -186,7 +274,11 @@ const Tasks = () => {
               <Form.Control
                 as="select"
                 value={taskDetails.status}
+
+                onChange={(e) => setTaskDetails((prevDetails) => ({ ...prevDetails, status: e.target.value }))}
+
                 onChange={(e) => setTaskDetails({ ...taskDetails, status: e.target.value })}
+
                 required
                 className="rounded-md"
               >
