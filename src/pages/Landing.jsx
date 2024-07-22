@@ -4,7 +4,11 @@ import { faSignInAlt, faUserPlus, faTasks, faUsers } from '@fortawesome/free-sol
 
 const LandingPage = () => {
   const handleNavigation = (path) => {
+
     console.log(`Navigating to: ${path}`);
+
+    console.log(Navigating to: ${path});
+
     window.location.href = path;
   };
 
@@ -12,7 +16,7 @@ const LandingPage = () => {
     <div
       className="min-h-screen flex items-center justify-center"
       style={{
-        backgroundImage: `url('https://img.freepik.com/free-photo/3d-render-grunge-room-interior-with-foggy-atmosphere_1048-14608.jpg?w=996&t=st=1721313292~exp=1721313892~hmac=08925affd2970222982c33669db3755233325dc79200e638b41a30b575d72ce6')`,
+        backgroundImage: url('https://img.freepik.com/free-photo/3d-render-grunge-room-interior-with-foggy-atmosphere_1048-14608.jpg?w=996&t=st=1721313292~exp=1721313892~hmac=08925affd2970222982c33669db3755233325dc79200e638b41a30b575d72ce6'),
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}

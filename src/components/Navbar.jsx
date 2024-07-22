@@ -12,7 +12,11 @@ const Navbar = () => {
   };
 
   const handleNavigation = (path) => {
+
     console.log(`Navigating to: ${path}`);
+
+    console.log(Navigating to: ${path});
+
     window.location.href = path;
   };
 
