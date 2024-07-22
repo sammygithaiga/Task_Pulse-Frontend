@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
 import { Modal, Button, Form } from 'react-bootstrap';
-
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { SERVER_URL } from '../../utils';
 
-
-const Tasks = () => {
+const TasksPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [taskDetails, setTaskDetails] = useState({ name: '', description: '', status: 'Pending' });
   const [tasks, setTasks] = useState([]);
@@ -14,7 +12,6 @@ const Tasks = () => {
   const [filter, setFilter] = useState('All');
 
   useEffect(() => {
-
     const fetchTasks = async () => {
       try {
         const response = await fetch(`${SERVER_URL}/tasks`, {
@@ -28,7 +25,7 @@ const Tasks = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const { tasks } = await response.json(); 
+        const { tasks } = await response.json(); // Adjust according to your backend response
         setTasks(tasks);
         setFilteredTasks(tasks);
       } catch (error) {
@@ -38,19 +35,10 @@ const Tasks = () => {
     };
 
     fetchTasks();
-
-    fetch('/api/tasks')
-      .then((response) => response.json())
-      .then((data) => {
-        setTasks(data);
-        setFilteredTasks(data);
-      });
-
   }, []);
 
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -59,7 +47,7 @@ const Tasks = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // JWT token
         },
         body: JSON.stringify(taskDetails),
       });
@@ -69,7 +57,7 @@ const Tasks = () => {
       }
 
       toast.success('Task created successfully');
-      const newTask = await response.json(); 
+      const newTask = await response.json(); // Adjust according to your backend response
       setTasks((prevTasks) => [...prevTasks, newTask]);
       handleFilter(filter, [...tasks, newTask]);
       handleClose();
@@ -100,47 +88,6 @@ const Tasks = () => {
       console.error('Error deleting task:', error);
       toast.error('Failed to delete task');
     }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Mock API call
-    fetch('/api/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(taskDetails),
-    })
-      .then((response) => {
-        if (response.ok) {
-          toast.success('Task created successfully');
-          const newTask = { ...taskDetails, id: tasks.length + 1 };
-          setTasks([...tasks, newTask]);
-          handleFilter(filter, [...tasks, newTask]);
-          handleClose();
-        } else {
-          toast.error('Failed to create task');
-        }
-      })
-      .catch((error) => {
-        console.error('Error creating task', error);
-        toast.error('Failed to create task');
-      });
-  };
-
-  const handleDelete = (taskId) => {
-    fetch(/api//$`{taskId}`, { method: 'DELETE' })
-      .then((response) => {
-        if (response.ok) {
-          toast.success('Task deleted successfully');
-          const updatedTasks = tasks.filter((task) => task.id !== taskId);
-          setTasks(updatedTasks);
-          handleFilter(filter, updatedTasks);
-        } else {
-          toast.error('Failed to delete task');
-        }
-      });
-
   };
 
   const handleFilter = (status, tasksList = tasks) => {
@@ -156,8 +103,7 @@ const Tasks = () => {
     <div
       className="min-h-screen flex flex-col items-center font-serif"
       style={{
-
-        backgroundImage: `url('https://image.shutterstock.com/image-photo/abstract-black-scene-one-cylinder-260nw-2306875853.jpg')
+        backgroundImage: `url('https://image.shutterstock.com/image-photo/abstract-black-scene-one-cylinder-260nw-2306875853.jpg')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
@@ -245,11 +191,7 @@ const Tasks = () => {
                 type="text"
                 placeholder="Enter task name"
                 value={taskDetails.name}
-
                 onChange={(e) => setTaskDetails((prevDetails) => ({ ...prevDetails, name: e.target.value }))}
-
-                onChange={(e) => setTaskDetails({ ...taskDetails, name: e.target.value })}
-
                 required
                 className="rounded-md"
               />
@@ -260,11 +202,7 @@ const Tasks = () => {
                 type="text"
                 placeholder="Enter task description"
                 value={taskDetails.description}
-
                 onChange={(e) => setTaskDetails((prevDetails) => ({ ...prevDetails, description: e.target.value }))}
-
-                onChange={(e) => setTaskDetails({ ...taskDetails, description: e.target.value })}
-
                 required
                 className="rounded-md"
               />
@@ -274,11 +212,7 @@ const Tasks = () => {
               <Form.Control
                 as="select"
                 value={taskDetails.status}
-
                 onChange={(e) => setTaskDetails((prevDetails) => ({ ...prevDetails, status: e.target.value }))}
-
-                onChange={(e) => setTaskDetails({ ...taskDetails, status: e.target.value })}
-
                 required
                 className="rounded-md"
               >
@@ -297,4 +231,4 @@ const Tasks = () => {
   );
 };
 
-export default Tasks;
+export default TasksPage;
