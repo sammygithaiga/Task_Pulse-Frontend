@@ -194,6 +194,8 @@ const TasksPage = () => {
         </ul>
       </div>
 
+      
+
       <Modal show={showModal} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Add Task</Modal.Title>
