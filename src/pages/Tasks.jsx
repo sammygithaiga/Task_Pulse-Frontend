@@ -12,6 +12,7 @@ const TasksPage = () => {
   const [filter, setFilter] = useState('All');
 
   useEffect(() => {
+
     fetchTasks();
   }, []);
 
@@ -40,6 +41,41 @@ const TasksPage = () => {
   };
 
   const handleShow = () => setShowModal(true);
+
+    const fetchTasks = async () => {
+      try {
+        const response = await fetch(`${SERVER_URL}/tasks`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // JWT token
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Adjust according to your backend response
+        setTasks(data.tasks); // Assuming your backend returns { tasks: [...] }
+        setFilteredTasks(data.tasks);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+        toast.error('Failed to fetch tasks');
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
+  const handleShow = () => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      toast.error('You must be logged in to add a project');
+    } else {
+      setShowModal(true);
+    }
+  };
+
   const handleClose = () => setShowModal(false);
 
   const handleChange = (event) => {
@@ -71,7 +107,11 @@ const TasksPage = () => {
     })
     .then((newTask) => {
       toast.success('Task created successfully');
+
       setTasks([...tasks, newTask.task]);
+
+      const newTask = await response.json(); // Adjust according to your backend response
+      setTasks((prevTasks) => [...prevTasks, newTask.task]); // Assuming your backend returns the created task
       handleFilter(filter, [...tasks, newTask.task]);
       handleClose();
     })

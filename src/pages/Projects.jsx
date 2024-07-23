@@ -151,11 +151,11 @@ const ProjectsPage = () => {
             Completed
           </Button>
         </div>
-        <table className="w-full bg-white bg-opacity-80 rounded-lg shadow-lg">
+        <table className="w-full border border-gray-300 rounded-lg overflow-hidden bg-gray-50">
           <thead>
             <tr className="bg-teal-600 text-white">
               <th className="border px-4 py-2">Number</th>
-              <th className="border px-4 py-2">Name</th>
+              <th className="border px-4 py-2">Title</th>
               <th className="border px-4 py-2">Description</th>
               <th className="border px-4 py-2">Status</th>
               <th className="border px-4 py-2">Actions</th>
