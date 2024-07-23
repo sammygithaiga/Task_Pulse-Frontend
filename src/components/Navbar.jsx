@@ -114,9 +114,7 @@ const Navbar = () => {
                 <FontAwesomeIcon icon={faSignInAlt} className="mr-2" />
                 Login
               </button>
-              <button onClick={() => handleNavigation('/landing')} className="block text-white hover:bg-blue-700 dark:hover:bg-gray-600 px-3 py-2 rounded-md text-base font-medium">
-                Landing Page
-              </button>
+            
               <button onClick={toggleDarkMode} className="block text-white hover:bg-blue-700 dark:hover:bg-gray-600 px-3 py-2 rounded-md text-base font-medium">
                 <FontAwesomeIcon icon={darkMode ? faSun : faMoon} />
               </button>
