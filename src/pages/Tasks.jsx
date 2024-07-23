@@ -25,9 +25,9 @@ const TasksPage = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-        const { tasks } = await response.json(); // Adjust according to your backend response
-        setTasks(tasks);
-        setFilteredTasks(tasks);
+        const data = await response.json(); // Adjust according to your backend response
+        setTasks(data.tasks); // Assuming your backend returns { tasks: [...] }
+        setFilteredTasks(data.tasks);
       } catch (error) {
         console.error('Error fetching tasks:', error);
         toast.error('Failed to fetch tasks');
@@ -37,7 +37,14 @@ const TasksPage = () => {
     fetchTasks();
   }, []);
 
-  const handleShow = () => setShowModal(true);
+  const handleShow = () => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      toast.error('You must be logged in to add a project');
+    } else {
+      setShowModal(true);
+    }
+  };
   const handleClose = () => setShowModal(false);
 
   const handleSubmit = async (event) => {
@@ -58,8 +65,8 @@ const TasksPage = () => {
 
       toast.success('Task created successfully');
       const newTask = await response.json(); // Adjust according to your backend response
-      setTasks((prevTasks) => [...prevTasks, newTask]);
-      handleFilter(filter, [...tasks, newTask]);
+      setTasks((prevTasks) => [...prevTasks, newTask.task]); // Assuming your backend returns the created task
+      handleFilter(filter, [...tasks, newTask.task]);
       handleClose();
     } catch (error) {
       console.error('Error creating task:', error);
